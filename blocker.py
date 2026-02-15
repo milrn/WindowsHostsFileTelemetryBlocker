@@ -51,9 +51,10 @@ if is_running_elevated() == True:
             try:
                 #add a update log to the hosts file
                 hasUpdate = False
-                with open(hosts_file_path, 'a') as hosts:
-                    hosts.write(f'# Update Date: {today.strftime("%Y-%m-%d")}\n')
-                    hosts.write(f'# Update From: hagezi\n')
+                if calledFrom != "PermissionError":
+                    with open(hosts_file_path, 'a') as hosts:
+                        hosts.write(f'# Update Date: {today.strftime("%Y-%m-%d")}\n')
+                        hosts.write(f'# Update From: hagezi\n')
                 #adds the new host blocks that do not exist yet
                 for line in open("hageziblocklist.txt"):
                     if "#" not in line:
@@ -109,9 +110,10 @@ if is_running_elevated() == True:
             try:
                 #add update log to hosts file
                 hasUpdate = False
-                with open(hosts_file_path, 'a') as hosts:
-                    hosts.write(f'# Update Date: {today.strftime("%Y-%m-%d")}\n')
-                    hosts.write(f'# Update From: You\n')
+                if calledFrom != "PermissionError":
+                    with open(hosts_file_path, 'a') as hosts:
+                        hosts.write(f'# Update Date: {today.strftime("%Y-%m-%d")}\n')
+                        hosts.write(f'# Update From: You\n')
                 #adds hosts to blocklist if they don't already exist
                 for line in links:
                     if "#" not in line and line != "-i":
