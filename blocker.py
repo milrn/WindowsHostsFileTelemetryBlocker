@@ -1,6 +1,7 @@
 import urllib.request
 from datetime import datetime
 import ctypes
+import time
 today = datetime.now()
 #check if script is running as administrator
 def is_running_elevated():
@@ -30,22 +31,23 @@ if is_running_elevated() == True:
         print("")
         print("------------------------------------------------------------------------------------------------")
         print("")
-        run(option)
-    def run(option):
+        run(option, "main")
+    def run(option, calledFrom):
         #download updated host list from hagezi's github repository
         if option == "1":
-            try:
-                urllib.request.urlretrieve(hagezi, "hageziblocklist.txt")
-                print("Update downloaded successfully.")
-            except Exception as e:
-                print(f"Failed to download update: {e}.")
+            if calledFrom != "PermissionError":
+                try:
+                    urllib.request.urlretrieve(hagezi, "hageziblocklist.txt")
+                    print("Update downloaded successfully.")
+                except Exception as e:
+                    print(f"Failed to download update: {e}.")
+                    print("")
+                    print("------------------------------------------------------------------------------------------------")
+                    print("")
+                    mainmenu()
                 print("")
-                print("------------------------------------------------------------------------------------------------")
+                print("Installing...")
                 print("")
-                mainmenu()
-            print("")
-            print("Installing...")
-            print("")
             try:
                 #add a update log to the hosts file
                 hasUpdate = False
@@ -82,6 +84,10 @@ if is_running_elevated() == True:
                 print("")
                 mainmenu()
             except Exception as e:
+                if isinstance(e, PermissionError):
+                    time.sleep(3)
+                    run(option, "PermissionError")
+                #fix weird permission error which happens despite having appropriate permissions
                 print("------------------------------------------------------------------------------------------------")
                 print("")
                 print(f"Failed to Update Hosts File: {e}.")
